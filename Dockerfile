@@ -11,4 +11,4 @@ ENV PATH=/opt/node_modules/.bin:$PATH
 
 COPY . .
 
-CMD ["npx", "playwright", "test"]
+CMD ["/opt/node_modules/.bin/playwright", "test"]
