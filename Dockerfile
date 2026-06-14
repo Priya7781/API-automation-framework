@@ -4,6 +4,10 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 RUN npm ci
+RUN cp -a node_modules /opt/node_modules
+
+ENV NODE_PATH=/opt/node_modules
+ENV PATH=/opt/node_modules/.bin:$PATH
 
 COPY . .
 
