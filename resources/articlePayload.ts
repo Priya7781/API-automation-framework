@@ -21,6 +21,7 @@ export const longFormArticlePayload = () => ({
     title: `Automation Guide ${Date.now()}`,
     description: 'A detailed guide to API test automation',
     body: 'API automation helps validate status codes, response bodies, headers, and authentication flows.',
+    
     tagList: ['Testing', 'Guide']
   }
 });
