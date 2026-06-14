@@ -1,34 +1,42 @@
-name: Playwright Automation
+name: Playwright API Tests
 
 on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
   repository_dispatch:
     types: [run-playwright-tests]
 
 jobs:
-  playwright-tests:
+  api-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      - name: Checkout Automation Repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Run Playwright Tests
+      - name: Run Playwright API tests
         run: npx playwright test
+        env:
+          API_AUTH_TOKEN: ${{ secrets.API_AUTH_TOKEN }}
 
-      - name: Upload Playwright Report
+      - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14
