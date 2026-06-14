@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: playwright-api-tests
+  labels:
+    app: playwright-api-tests
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: playwright-api-tests
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: checkout-tests
+          image: alpine/git:latest
+          args:
+            - clone
+            - --depth=1
+            - --branch=main
+            - https://github.com/Priya7781/API-automation-framework.git
+            - /app
+          volumeMounts:
+            - name: test-source
+              mountPath: /app
+      containers:
+        - name: playwright
+          image: ghcr.io/priya7781/api-automation-framework-tests:latest
+          imagePullPolicy: Always
+          command:
+            - /opt/node_modules/.bin/playwright
+            - test
+          env:
+            - name: API_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: playwright-api-secrets
+                  key: API_AUTH_TOKEN
+          volumeMounts:
+            - name: test-source
+              mountPath: /app
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+      volumes:
+        - name: test-source
+          emptyDir: {}
