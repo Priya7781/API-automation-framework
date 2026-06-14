@@ -30,8 +30,7 @@ test('to do POST request', async ({ request }) => {
   const data = await response.json();
   console.log(data);
 
-  // // Assertion to verify that the response contains the expected tag
-  // expect(data.tags).toContain('Test');
+  expect(response.status()).toBe(201);
 });
 
 
