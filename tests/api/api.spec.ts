@@ -22,6 +22,7 @@ test('to do POST request', async ({ request }) => {
     data: articlePayload()
   });
   console.log(await response.text());
+  
 
   const data = await response.json();
   console.log(data);
